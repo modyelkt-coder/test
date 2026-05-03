@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>For Retag ❤️</title>
+    <style>
+        body {
+            background-color: black;
+            color: #ff4d4d;
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            white-space: pre;
+            font-size: 8px; 
+            line-height: 8px;
+            overflow: hidden;
+        }
+        .white-text { color: white; font-weight: bold; font-size: 10px; }
+        #signature { margin-top: 20px; font-size: 16px; color: #ff4d4d; height: 20px; }
+        
+        /* ستايل الزرار */
+        #btn-again {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: transparent;
+            color: #ff4d4d;
+            border: 1px solid #ff4d4d;
+            cursor: pointer;
+            font-family: monospace;
+            border-radius: 5px;
+            display: none; /* بيفضل مخفي لحد ما الرسم يخلص */
+            transition: 0.3s;
+        }
+        #btn-again:hover {
+            background-color: #ff4d4d;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div id="heart"></div>
+    <div id="signature"></div>
+    <button id="btn-again" onclick="resetAndDraw()">Again</button>
+
+    <script>
+        const heartElement = document.getElementById('heart');
+        const signatureElement = document.getElementById('signature');
+        const btnAgain = document.getElementById('btn-again');
+        const message = "love you";
+        const name = " R E T A G ";
+        
+        let charCount = 0;
+        let nameIdx = 0;
+        let drawing = false;
+
+        async function drawHeart() {
+            if(drawing) return;
+            drawing = true;
+            
+            heartElement.innerHTML = "";
+            signatureElement.innerHTML = "";
+            btnAgain.style.display = "none";
+            charCount = 0;
+            nameIdx = 0;
+
+            for (let y = 1.5; y > -1.5; y -= 0.1) {
+                for (let x = -1.5; x < 1.5; x += 0.05) {
+                    let formula = Math.pow(x*x + y*y - 1, 3) - x*x * Math.pow(y, 3);
+
+                    if (formula <= 0) {
+                        if (y < 0.1 && y > -0.1 && x > -0.4 && x < 0.4 && nameIdx < name.length) {
+                            const span = document.createElement('span');
+                            span.className = 'white-text';
+                            span.innerText = name[nameIdx++];
+                            heartElement.appendChild(span);
+                        } else {
+                            const text = document.createTextNode(message[charCount % message.length]);
+                            heartElement.appendChild(text);
+                            charCount++;
+                        }
+                        await new Promise(r => setTimeout(r, 1)); 
+                    } else {
+                        heartElement.appendChild(document.createTextNode(" "));
+                    }
+                }
+                heartElement.appendChild(document.createTextNode("\n"));
+            }
+            
+            const footer = "by ali <3";
+            for(let char of footer) {
+                signatureElement.innerHTML += char;
+                await new Promise(r => setTimeout(r, 100));
+            }
+            
+            // إظهار الزرار بعد ما يخلص رسم
+            btnAgain.style.display = "block";
+            drawing = false;
+        }
+
+        function resetAndDraw() {
+            drawHeart();
+        }
+
+        // ابدأ الرسم أول ما يفتح الموقع
+        drawHeart();
+    </script>
+</body>
+</html>
